@@ -1,56 +1,62 @@
-# Welcome to your Expo app 👋
+# Cálculo Rápido
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Juego de cálculo mental hecho con Expo (SDK 57). Resuelves sumas, restas, multiplicaciones y divisiones contra el reloj. La app no pide cuenta: la abres y juegas.
 
-## Get started
+## Reglas
 
-1. Install dependencies
+- Empiezas con 60 segundos.
+- Cada 10 aciertos seguidos suman 10 segundos al reloj.
+- Un error pone la racha en cero. Los aciertos que llevas se quedan.
+- Al acabarse el tiempo ves tus aciertos, errores, mejor racha y el tiempo extra que ganaste.
+- Todas las respuestas son números enteros: las restas nunca dan negativo y las divisiones siempre son exactas.
 
-   ```bash
-   npm install
-   ```
+## Configurar
 
-2. Start the app
+Desde Inicio, **Configurar** te deja elegir el nivel y las operaciones (suma, resta, multiplicación, división; al menos una queda activa).
 
-   ```bash
-   npx expo start
-   ```
+| Nivel | Números | Ejemplos |
+| --- | --- | --- |
+| Fácil | 1 dígito con 1 dígito | 9 + 4, 7 × 8 |
+| Medio | 2 dígitos con 1 dígito | 21 × 5, 84 ÷ 7 |
+| Difícil | 2 dígitos con 2 dígitos | 23 × 45, 96 ÷ 12 |
 
-In the output, you'll find options to open the app in a
+En Fácil, las divisiones son las tablas al revés (56 ÷ 8): con un dividendo de 1 dígito solo existen cinco divisiones exactas.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+La app guarda en el teléfono tu configuración y un récord por nivel. El tiempo y el bonus están en [`src/constants.ts`](src/constants.ts); los rangos de cada nivel, en [`src/utils/questions.ts`](src/utils/questions.ts).
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Correr la app
 
-## Get a fresh project
-
-When you're ready, run:
+Necesitas Node 20.19.4 o más nuevo.
 
 ```bash
-npm run reset-project
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Desde ahí:
 
-### Other setup steps
+- **En tu teléfono:** instala Expo Go y escanea el código QR.
+- **En el simulador de iOS:** presiona `i`. Requiere Xcode seleccionado (`sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`).
+- **En el navegador:** presiona `w`. En web también puedes jugar con el teclado: números, `Backspace` y `Enter`.
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Verificar cambios
 
-## Learn more
+```bash
+npm test            # lógica del juego (preguntas por nivel, configuración, racha, bonus, tiempo)
+npx tsc --noEmit    # tipos
+npm run lint
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Estructura
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+src/
+├── app/               # rutas: inicio (index), partida (game) y configurar (settings)
+├── screens/game/      # pantalla de juego: marcador, barras, respuesta, teclado, resultados
+├── components/        # botón compartido
+├── hooks/             # récord por nivel, configuración guardada, fuente de íconos
+├── utils/             # preguntas, configuración, reducer del juego, almacenamiento, hápticos
+├── constants.ts       # reglas ajustables
+└── theme.ts           # colores del sistema, espaciado, tipografía, animación
+```
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+La lógica del juego está en funciones puras (`utils/questions.ts`, `utils/game.ts`), con sus pruebas al lado. Las pantallas agregan el reloj, la animación y los hápticos encima.
