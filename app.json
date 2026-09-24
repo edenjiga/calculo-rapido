@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Cálculo Rápido",
-    "slug": "game-app",
+    "name": "Calculo Rapido",
+    "slug": "calculo-rapido",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -39,6 +39,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "164be6d6-0946-452d-a9f8-3b6c207095a3"
+      }
+    },
+    "owner": "edenjiga"
   }
 }

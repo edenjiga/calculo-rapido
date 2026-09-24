@@ -33,7 +33,7 @@ export default function RootLayout() {
           headerTintColor: colors.tint,
           contentStyle: { backgroundColor: colors.background },
         }}>
-        <Stack.Screen name="index" options={{ title: 'Cálculo Rápido', headerLargeTitleEnabled: true }} />
+        <Stack.Screen name="index" options={{ title: 'Calculo Rapido', headerLargeTitleEnabled: true }} />
         <Stack.Screen name="game" options={{ title: '' }} />
         <Stack.Screen name="settings" options={{ title: 'Configurar' }} />
       </Stack>

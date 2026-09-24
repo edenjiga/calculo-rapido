@@ -1,4 +1,4 @@
-# Cálculo Rápido
+# Calculo Rapido
 
 Juego de cálculo mental hecho con Expo (SDK 57). Resuelves sumas, restas, multiplicaciones y divisiones contra el reloj. La app no pide cuenta: la abres y juegas.
 
