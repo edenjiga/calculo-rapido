@@ -1,0 +1,343 @@
+---
+// Datos de la política. Antes de publicar, pon tu correo en CONTACT_EMAIL
+// y vuelve a generar la página con `npm run build`.
+const APP_NAME = 'Calculo Rapido';
+const PACKAGE_NAME = 'com.edgarjimenez.gameapp';
+const DEVELOPER = 'Edgar Jimenez';
+const CONTACT_EMAIL = ''; // por ejemplo: 'tucorreo@gmail.com'
+const UPDATED = '2026-09-24'; // última revisión, AAAA-MM-DD
+
+const updatedLabel = new Intl.DateTimeFormat('es', { dateStyle: 'long', timeZone: 'UTC' }).format(
+  new Date(UPDATED)
+);
+
+if (!CONTACT_EMAIL) {
+  console.warn(
+    '\n⚠️  Falta CONTACT_EMAIL en src/pages/index.astro: la página muestra un aviso y Google Play exige un contacto.\n'
+  );
+}
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Política de privacidad · {APP_NAME}</title>
+    <meta name="description" content={`Qué datos guarda ${APP_NAME} y cómo borrarlos.`} />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="favicon.png" />
+  </head>
+  <body>
+    {
+      !CONTACT_EMAIL && (
+        <p class="missing" role="alert">
+          Falta el correo de contacto. Rellena <code>CONTACT_EMAIL</code> en
+          <code>src/pages/index.astro</code> y vuelve a generar la página antes de dar esta URL a
+          Google Play.
+        </p>
+      )
+    }
+    <main>
+      <header>
+        <img src="icon.png" alt="" width="64" height="64" />
+        <div>
+          <p class="app">{APP_NAME}</p>
+          <h1>Política de privacidad</h1>
+          <p class="updated">
+            Última actualización: <time datetime={UPDATED}>{updatedLabel}</time>
+          </p>
+        </div>
+      </header>
+
+      <section class="summary" aria-labelledby="resumen">
+        <h2 id="resumen">Resumen</h2>
+        <p>
+          {APP_NAME} no recopila datos personales. Lo único que guarda, tus récords y tu configuración,
+          se queda en tu teléfono.
+        </p>
+        <ul class="facts">
+          <li><span aria-hidden="true">✓</span> Sin cuentas</li>
+          <li><span aria-hidden="true">✓</span> Sin anuncios</li>
+          <li><span aria-hidden="true">✓</span> Sin analíticas ni seguimiento</li>
+          <li><span aria-hidden="true">✓</span> Funciona sin internet</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Responsable</h2>
+        <p>
+          {APP_NAME} (<code>{PACKAGE_NAME}</code>) es una app para Android desarrollada por {DEVELOPER}.
+          Esta política explica qué hace la app con tu información.
+        </p>
+      </section>
+
+      <section>
+        <h2>Qué guarda la app en tu teléfono</h2>
+        <ul>
+          <li>Tu mejor puntuación en cada nivel de dificultad.</li>
+          <li>Tu configuración: el nivel elegido y las operaciones activas.</li>
+        </ul>
+        <p>
+          Estos datos se guardan en el almacenamiento interno de la app para que no se pierdan al
+          cerrarla. No incluyen nada que te identifique y la app no los envía a ningún sitio.
+        </p>
+      </section>
+
+      <section>
+        <h2>Qué no recopila</h2>
+        <p>La app no pide ni recoge:</p>
+        <ul>
+          <li>Nombre, correo, teléfono ni ningún tipo de cuenta.</li>
+          <li>Tu ubicación.</li>
+          <li>Contactos, fotos, archivos, cámara ni micrófono.</li>
+          <li>Identificadores de publicidad o del dispositivo.</li>
+          <li>Datos de uso, analíticas ni informes de errores.</li>
+        </ul>
+        <p>
+          No incluye publicidad ni servicios de terceros de analítica o seguimiento, y no se conecta a
+          ningún servidor. No se comparten ni se venden datos con nadie.
+        </p>
+      </section>
+
+      <section>
+        <h2>Copia de seguridad de Android</h2>
+        <p>
+          Si tienes activada la copia de seguridad de Google en tu teléfono, Android puede incluir
+          estos datos en ella y recuperarlos cuando reinstalas la app o cambias de teléfono. Esa copia
+          la gestiona Google en tu cuenta y el desarrollador no tiene acceso a ella. Puedes
+          desactivarla en los ajustes de Android.
+        </p>
+      </section>
+
+      <section>
+        <h2>Google Play</h2>
+        <p>
+          Cuando descargas o actualizas la app, Google Play trata algunos datos por su cuenta, según
+          la <a href="https://policies.google.com/privacy?hl=es">política de privacidad de Google</a>.
+          Al desarrollador le muestra estadísticas agregadas, como el número de instalaciones, e
+          informes de fallos sin datos que te identifiquen, de los usuarios que comparten
+          diagnósticos con Google.
+        </p>
+      </section>
+
+      <section>
+        <h2>Menores</h2>
+        <p>La app no recopila datos personales de ningún usuario, tampoco de menores de edad.</p>
+      </section>
+
+      <section>
+        <h2>Cómo borrar tus datos</h2>
+        <p>
+          Abre los ajustes de Android, entra en <em>Aplicaciones</em> → <em>{APP_NAME}</em> →
+          <em>Almacenamiento</em> y toca <em>Borrar datos</em>. Desinstalar la app también los borra.
+          Los nombres de los menús pueden variar según el fabricante del teléfono.
+        </p>
+      </section>
+
+      <section>
+        <h2>Cambios en esta política</h2>
+        <p>
+          Si una versión futura cambia lo que la app hace con los datos, esta página se actualizará
+          antes de publicarla, con una nueva fecha arriba.
+        </p>
+      </section>
+
+      <section>
+        <h2>Contacto</h2>
+        <p>
+          Para cualquier duda sobre esta política o sobre tus datos, escribe a {
+            CONTACT_EMAIL ? (
+              <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
+            ) : (
+              <strong class="pending">[correo pendiente]</strong>
+            )
+          }. Como el desarrollador no guarda datos tuyos, no hay nada que consultar, corregir o borrar
+          en sus sistemas.
+        </p>
+      </section>
+    </main>
+
+    <footer>
+      <p>{APP_NAME} · {DEVELOPER}</p>
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --text: #1c1c1e;
+    --muted: #6e6e73;
+    --tint: #007aff;
+    --surface: #f2f2f7;
+    --border: #e5e5ea;
+    --danger: #c4001a;
+    --danger-bg: #fff0f0;
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #000000;
+      --text: #f2f2f7;
+      --muted: #98989f;
+      --tint: #0a84ff;
+      --surface: #1c1c1e;
+      --border: #38383a;
+      --danger: #ff6961;
+      --danger-bg: #2c0f0d;
+    }
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+  }
+
+  main,
+  footer {
+    max-width: 42rem;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+
+  main {
+    padding-top: 2.5rem;
+  }
+
+  header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  header img {
+    flex: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+  }
+
+  .app {
+    margin: 0;
+    font-weight: 600;
+    color: var(--tint);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .updated {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  h2 {
+    margin: 2rem 0 0.5rem;
+    font-size: 1.125rem;
+    line-height: 1.3;
+  }
+
+  p,
+  ul {
+    margin: 0 0 0.75rem;
+  }
+
+  ul {
+    padding-left: 1.25rem;
+  }
+
+  li {
+    margin-bottom: 0.25rem;
+  }
+
+  a {
+    color: var(--tint);
+  }
+
+  code {
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    background: var(--surface);
+    font-size: 0.9em;
+    overflow-wrap: anywhere;
+  }
+
+  .summary {
+    padding: 1.25rem;
+    border-radius: 16px;
+    background: var(--surface);
+  }
+
+  .summary h2 {
+    margin-top: 0;
+  }
+
+  .summary code {
+    background: var(--bg);
+  }
+
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .facts li {
+    margin: 0;
+    padding: 0.25rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg);
+    font-size: 0.875rem;
+  }
+
+  .facts span {
+    color: var(--tint);
+    font-weight: 700;
+  }
+
+  .missing {
+    margin: 0;
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid currentColor;
+    background: var(--danger-bg);
+    color: var(--danger);
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .missing code {
+    background: transparent;
+  }
+
+  .pending {
+    color: var(--danger);
+  }
+
+  footer p {
+    margin: 2.5rem 0 0;
+    padding: 1rem 0 2.5rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+</style>
