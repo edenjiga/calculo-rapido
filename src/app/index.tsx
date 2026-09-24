@@ -18,6 +18,10 @@ const RULES: Rule[] = [
     text: `Tienes ${START_TIME_MS / 1000} segundos para resolver todas las operaciones que puedas.`,
   },
   {
+    icon: { ios: 'checkmark.circle', android: 'check_circle', web: 'check_circle' },
+    text: 'Completa las cifras indicadas: la respuesta se evalúa y pasas a la siguiente automáticamente.',
+  },
+  {
     icon: { ios: 'bolt.fill', android: 'bolt', web: 'bolt' },
     text: `Cada ${BONUS_EVERY} aciertos seguidos ganas ${BONUS_TIME_MS / 1000} segundos más.`,
   },

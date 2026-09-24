@@ -45,13 +45,13 @@ export function useGame(settings: QuestionSettings) {
   return {
     ...state,
     seconds: playing ? seconds : 0,
-    type: (digit: Digit) => dispatch({ type: 'type', digit }),
-    erase: () => dispatch({ type: 'erase' }),
-    submit: () =>
+    type: (digit: Digit) =>
       dispatch({
-        type: 'submit',
+        type: 'type',
+        digit,
         now: Date.now(),
         next: createQuestion(settings, Math.random, state.question),
       }),
+    erase: () => dispatch({ type: 'erase' }),
   };
 }

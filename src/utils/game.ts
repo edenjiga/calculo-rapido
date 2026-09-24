@@ -1,4 +1,4 @@
-import { BONUS_EVERY, BONUS_TIME_MS, MAX_ANSWER_DIGITS, START_TIME_MS } from '@/constants';
+import { BONUS_EVERY, BONUS_TIME_MS, START_TIME_MS } from '@/constants';
 import type { Question } from '@/utils/questions';
 
 export type Digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
@@ -27,10 +27,13 @@ export type GameState = {
 
 // Time and the next question come in on the action so the reducer stays pure.
 export type GameAction =
-  | { type: 'type'; digit: Digit }
+  | { type: 'type'; digit: Digit; now: number; next: Question }
   | { type: 'erase' }
-  | { type: 'submit'; now: number; next: Question }
   | { type: 'expire'; now: number };
+
+export function answerLength(question: Question) {
+  return String(question.answer).length;
+}
 
 export function createGame(now: number, question: Question): GameState {
   return {
@@ -52,25 +55,21 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
   if (state.status === 'over') return state;
 
   switch (action.type) {
-    case 'type': {
-      if (state.input.length >= MAX_ANSWER_DIGITS) return state;
-      // Replace a lone leading zero instead of building "05".
-      const input = state.input === '0' ? action.digit : state.input + action.digit;
-      return { ...state, input };
-    }
-
     case 'erase':
       return state.input ? { ...state, input: state.input.slice(0, -1) } : state;
 
     case 'expire':
       return action.now >= state.deadline ? { ...state, status: 'over' } : state;
 
-    case 'submit': {
+    case 'type': {
       // An answer that lands after the buzzer doesn't count.
       if (action.now >= state.deadline) return { ...state, status: 'over' };
-      if (!state.input) return state;
+      const input = state.input + action.digit;
+      // Wait for all digits, even when a partial answer is already wrong. Grading and
+      // advancing happen together so fast taps cannot submit the same answer twice.
+      if (input.length < answerLength(state.question)) return { ...state, input };
 
-      const given = Number(state.input);
+      const given = Number(input);
       const answered = state.answered + 1;
       const next = { ...state, question: action.next, input: '', answered };
 

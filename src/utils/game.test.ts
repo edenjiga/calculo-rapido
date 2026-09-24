@@ -6,23 +6,21 @@ const T0 = 1_000_000;
 const q = (a: number, b: number): Question => ({ operation: 'add', a, b, answer: a + b });
 const NEXT = q(1, 1);
 
-function typeNumber(state: GameState, value: number) {
-  for (const digit of String(value)) state = gameReducer(state, { type: 'type', digit: digit as Digit });
+function typeNumber(state: GameState, value: number | string, now = T0 + 1_000, next = NEXT) {
+  for (const digit of String(value)) {
+    state = gameReducer(state, { type: 'type', digit: digit as Digit, now, next });
+  }
   return state;
 }
 
 function answer(state: GameState, value: number, now = T0 + 1_000) {
-  return gameReducer(typeNumber(state, value), { type: 'submit', now, next: NEXT });
+  return typeNumber(state, String(value).padStart(String(state.question.answer).length, '0'), now);
 }
 
 /** Answers `count` questions correctly, each with a fresh question. */
 function answerCorrectly(state: GameState, count: number) {
   for (let i = 0; i < count; i++) {
-    state = gameReducer(typeNumber(state, state.question.answer), {
-      type: 'submit',
-      now: T0 + 1_000,
-      next: q(i + 2, i + 3),
-    });
+    state = typeNumber(state, state.question.answer, T0 + 1_000, q(i + 2, i + 3));
   }
   return state;
 }
@@ -36,15 +34,16 @@ describe('createGame', () => {
 });
 
 describe('typing', () => {
-  const start = createGame(T0, q(2, 3));
+  const start = createGame(T0, q(80, 20));
 
-  it('caps input at four digits', () => {
-    expect(typeNumber(start, 123456).input).toBe('1234');
+  it('completes the answer at the required number of digits', () => {
+    expect(typeNumber(start, 10)).toMatchObject({ input: '10', answered: 0, score: 0 });
+    expect(typeNumber(start, 100)).toMatchObject({ input: '', answered: 1, score: 1, question: NEXT });
   });
 
-  it('replaces a leading zero', () => {
+  it('counts leading zeros as entered digits', () => {
     expect(typeNumber(start, 0).input).toBe('0');
-    expect(gameReducer(typeNumber(start, 0), { type: 'type', digit: '7' }).input).toBe('7');
+    expect(typeNumber(start, '07').input).toBe('07');
   });
 
   it('erases the last digit', () => {
@@ -54,11 +53,13 @@ describe('typing', () => {
   });
 });
 
-describe('submitting', () => {
+describe('automatic answers', () => {
   const start = createGame(T0, q(2, 3));
 
-  it('ignores an empty answer', () => {
-    expect(gameReducer(start, { type: 'submit', now: T0, next: NEXT })).toBe(start);
+  it('waits for all digits before marking an incorrect answer', () => {
+    const multiDigit = createGame(T0, q(9, 9));
+    expect(typeNumber(multiDigit, 9)).toMatchObject({ input: '9', answered: 0, errors: 0 });
+    expect(typeNumber(multiDigit, 99)).toMatchObject({ input: '', answered: 1, errors: 1 });
   });
 
   it('scores a correct answer and moves on', () => {
@@ -68,9 +69,9 @@ describe('submitting', () => {
   });
 
   it('keeps the score on a wrong answer but resets the streak', () => {
-    const state = answer(answerCorrectly(start, 3), 99);
+    const state = answer(answerCorrectly(start, 3), 0);
     expect(state).toMatchObject({ score: 3, streak: 0, errors: 1, bestStreak: 3 });
-    expect(state.feedback).toMatchObject({ kind: 'wrong', given: 99 });
+    expect(state.feedback).toMatchObject({ kind: 'wrong', given: 0 });
   });
 
   it('reports the question that was missed, with its answer', () => {
@@ -129,7 +130,7 @@ describe('time running out', () => {
 
   it('ignores every action once the game is over', () => {
     const over = gameReducer(start, { type: 'expire', now: start.deadline });
-    expect(gameReducer(over, { type: 'type', digit: '1' })).toBe(over);
-    expect(gameReducer(over, { type: 'submit', now: start.deadline, next: NEXT })).toBe(over);
+    expect(gameReducer(over, { type: 'type', digit: '1', now: start.deadline, next: NEXT })).toBe(over);
+    expect(gameReducer(over, { type: 'erase' })).toBe(over);
   });
 });

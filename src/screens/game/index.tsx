@@ -3,14 +3,14 @@ import { useEffect, useState } from 'react';
 import { Text, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { AnswerDisplay, MistakeLine } from '@/screens/game/answer';
+import { AnswerDisplay, FeedbackLine } from '@/screens/game/answer';
 import { Keypad } from '@/screens/game/keypad';
 import { StreakMeter, TimeBar } from '@/screens/game/meters';
 import { Results } from '@/screens/game/results';
 import { Scoreboard } from '@/screens/game/scoreboard';
 import { useGame } from '@/screens/game/use-game';
 import { numerals, spacing, useColors } from '@/theme';
-import type { Digit } from '@/utils/game';
+import { answerLength, type Digit } from '@/utils/game';
 import { formatQuestion, speakQuestion } from '@/utils/questions';
 import { DIFFICULTY_LABELS } from '@/utils/settings';
 import { getBestScore, getSettings, saveScore } from '@/utils/storage';
@@ -41,7 +41,7 @@ function Round({ onPlayAgain }: { onPlayAgain: () => void }) {
   const [previousBest] = useState(() => getBestScore(difficulty));
   const [showResults, setShowResults] = useState(false);
   const game = useGame(settings);
-  const { status, score, errors, bestStreak, bonuses, type, erase, submit } = game;
+  const { status, score, errors, bestStreak, bonuses, type, erase } = game;
   const over = status === 'over';
 
   // Hold on "¡Tiempo!" for a beat so the ending registers, then show the results.
@@ -56,16 +56,15 @@ function Round({ onPlayAgain }: { onPlayAgain: () => void }) {
   useEffect(() => {
     if (process.env.EXPO_OS !== 'web' || over) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.metaKey || event.ctrlKey || event.altKey) return;
+      if (event.metaKey || event.ctrlKey || event.altKey || event.repeat) return;
       if (/^\d$/.test(event.key)) type(event.key as Digit);
       else if (event.key === 'Backspace') erase();
-      else if (event.key === 'Enter') submit();
       else return;
       event.preventDefault();
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [over, type, erase, submit]);
+  }, [over, type, erase]);
 
   if (showResults) {
     return (
@@ -115,17 +114,20 @@ function Round({ onPlayAgain }: { onPlayAgain: () => void }) {
             style={[numerals.question, { color: colors.label, opacity: over ? 0.4 : 1 }]}>
             {formatQuestion(game.question)}
           </Text>
-          <AnswerDisplay input={game.input} feedback={game.feedback} over={over} />
-          <MistakeLine feedback={game.feedback} />
+          <AnswerDisplay
+            input={game.input}
+            digits={answerLength(game.question)}
+            feedback={game.feedback}
+            over={over}
+          />
+          <FeedbackLine feedback={game.feedback} />
         </View>
 
         <Keypad
           keyHeight={keyHeight}
-          canSubmit={game.input.length > 0}
           inactive={over}
           onDigit={type}
           onErase={erase}
-          onSubmit={submit}
         />
       </View>
     </>

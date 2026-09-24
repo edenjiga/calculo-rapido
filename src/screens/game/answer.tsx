@@ -18,10 +18,12 @@ const SHAKE = [-8, 8, -5, 5, 0];
 
 export function AnswerDisplay({
   input,
+  digits,
   feedback,
   over,
 }: {
   input: string;
+  digits: number;
   feedback: Feedback | null;
   over: boolean;
 }) {
@@ -75,31 +77,40 @@ export function AnswerDisplay({
       />
       <Text
         testID="answer"
+        accessibilityLabel={
+          over
+            ? '¡Tiempo!'
+            : `Respuesta de ${digits} ${digits === 1 ? 'cifra' : 'cifras'}. ${input ? `Escrito: ${input}.` : 'Sin responder.'}`
+        }
         maxFontSizeMultiplier={1.2}
         style={[numerals.answer, { color: input || over ? colors.label : colors.tertiaryLabel }]}>
-        {over ? '¡Tiempo!' : input || '?'}
+        {over ? '¡Tiempo!' : [...input, ...Array<string>(digits - input.length).fill('·')].join(' ')}
       </Text>
     </Animated.View>
   );
 }
 
-/** Shows the right answer to the last question missed, until the next answer. */
-export function MistakeLine({ feedback }: { feedback: Feedback | null }) {
+/** Keeps the latest result visible while the player answers the next question. */
+export function FeedbackLine({ feedback }: { feedback: Feedback | null }) {
   const colors = useColors();
   const missed = feedback?.kind === 'wrong' ? feedback.question : null;
 
   // Always takes up space so the layout doesn't jump when it appears.
   return (
     <View style={{ minHeight: 24, flexDirection: 'row', alignItems: 'center', gap: spacing.xs }}>
-      {missed && (
+      {feedback && (
         <>
           <SymbolView
-            name={{ ios: 'xmark.circle.fill', android: 'cancel', web: 'cancel' }}
+            name={
+              missed
+                ? { ios: 'xmark.circle.fill', android: 'cancel', web: 'cancel' }
+                : { ios: 'checkmark.circle.fill', android: 'check_circle', web: 'check_circle' }
+            }
             size={18}
-            tintColor={colors.danger}
+            tintColor={missed ? colors.danger : colors.success}
           />
           <Text style={[typography.subhead, { color: colors.secondaryLabel }]}>
-            {formatQuestion(missed)} = {missed.answer}
+            {missed ? `Incorrecto: ${formatQuestion(missed)} = ${missed.answer}` : '¡Correcto!'}
           </Text>
         </>
       )}

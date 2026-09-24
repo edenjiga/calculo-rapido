@@ -5,6 +5,7 @@ Juego de cálculo mental hecho con Expo (SDK 57). Resuelves sumas, restas, multi
 ## Reglas
 
 - Empiezas con 60 segundos.
+- Completa las cifras indicadas en la respuesta: se marca como correcta o incorrecta y pasas automáticamente a la siguiente operación. Por ejemplo, para 1 + 1, pulsar 2 suma un acierto; pulsar 3 cuenta como error. Un resultado como 12 espera dos cifras.
 - Cada 10 aciertos seguidos suman 10 segundos al reloj.
 - Un error pone la racha en cero. Los aciertos que llevas se quedan.
 - Al acabarse el tiempo ves tus aciertos, errores, mejor racha y el tiempo extra que ganaste.
@@ -36,7 +37,7 @@ Desde ahí:
 
 - **En tu teléfono:** instala Expo Go y escanea el código QR.
 - **En el simulador de iOS:** presiona `i`. Requiere Xcode seleccionado (`sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`).
-- **En el navegador:** presiona `w`. En web también puedes jugar con el teclado: números, `Backspace` y `Enter`.
+- **En el navegador:** presiona `w`. En web también puedes jugar con el teclado: números y `Backspace`. No hace falta pulsar `Enter`.
 
 ## Verificar cambios
 
