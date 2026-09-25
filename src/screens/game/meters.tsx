@@ -3,6 +3,7 @@ import { Text, View } from 'react-native';
 import Animated, {
   cancelAnimation,
   Easing,
+  ReduceMotion,
   useAnimatedStyle,
   useReducedMotion,
   useSharedValue,
@@ -32,7 +33,11 @@ export function TimeBar({ deadline, running, low }: { deadline: number; running:
     // Bonus time grows the bar back quickly; otherwise it jumps straight to `left`.
     const grow = left > remaining.get() + 1000 && !reducedMotion ? motion.base : 0;
     remaining.set(
+      // The countdown is information, not decoration, so it runs even with reduced motion
+      // on; Reanimated would otherwise skip to the end and show an empty bar all round.
+      // The grow step already becomes an instant jump above.
       withSequence(
+        ReduceMotion.Never,
         withTiming(left, { duration: grow, easing: motion.easeOut }),
         withTiming(0, { duration: Math.max(0, left - grow), easing: Easing.linear })
       )
