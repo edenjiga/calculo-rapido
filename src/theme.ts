@@ -16,8 +16,10 @@ type Palette = {
   danger: ColorValue;
 };
 
+type Scheme = 'light' | 'dark';
+
 // Built only for the running platform: `Color.ios` means nothing on Android or web.
-function createPalettes(): Record<'light' | 'dark', Palette> {
+function createPalette(scheme: Scheme): Palette {
   if (process.env.EXPO_OS === 'ios') {
     // Semantic colors resolve on-device, so one palette covers both modes.
     const ios: Palette = {
@@ -32,10 +34,12 @@ function createPalettes(): Record<'light' | 'dark', Palette> {
       success: Color.ios.systemGreen,
       danger: Color.ios.systemRed,
     };
-    return { light: ios, dark: ios };
+    return ios;
   }
 
   if (process.env.EXPO_OS === 'android') {
+    // Unlike iOS, each read returns a fixed Material You color for the scheme that is on at
+    // that moment, so this must run while `scheme` is the active one.
     const android = {
       background: Color.android.dynamic.surface,
       label: Color.android.dynamic.onSurface,
@@ -48,10 +52,7 @@ function createPalettes(): Record<'light' | 'dark', Palette> {
       danger: Color.android.dynamic.error,
     };
     // Material 3 has no dynamic green, so success is a declared pair.
-    return {
-      light: { ...android, success: '#2E7D32' },
-      dark: { ...android, success: '#81C784' },
-    };
+    return { ...android, success: scheme === 'dark' ? '#81C784' : '#2E7D32' };
   }
 
   // Web: the iOS system values for each mode.
@@ -80,14 +81,20 @@ function createPalettes(): Record<'light' | 'dark', Palette> {
       success: '#30D158',
       danger: '#FF453A',
     },
-  };
+  }[scheme];
 }
 
-const palettes = createPalettes();
+const palettes: Partial<Record<Scheme, Palette>> = {};
+
+// Each palette is built the first time its scheme is on (see the Android note above), so
+// flipping dark mode with the app open gives new colors instead of the launch-time ones.
+function paletteFor(scheme: Scheme) {
+  return (palettes[scheme] ??= createPalette(scheme));
+}
 
 /** Call inside every component that renders colors: it re-renders them when the system theme flips. */
 export function useColors() {
-  return palettes[useColorScheme() === 'dark' ? 'dark' : 'light'];
+  return paletteFor(useColorScheme() === 'dark' ? 'dark' : 'light');
 }
 
 // `@expo/ui` text only takes plain color strings, so these mirror the iOS label colors.
