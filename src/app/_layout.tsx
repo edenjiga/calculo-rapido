@@ -1,6 +1,7 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router/react-navigation';
 import { Stack } from 'expo-router/stack';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
@@ -37,6 +38,7 @@ export default function RootLayout() {
         <Stack.Screen name="game" options={{ title: '' }} />
         <Stack.Screen name="settings" options={{ title: 'Configurar' }} />
       </Stack>
+      <StatusBar style="auto" />
     </ThemeProvider>
   );
 }
