@@ -1,8 +1,24 @@
-# Icono de Calculo Rapido
+# Imágenes de Calculo Rapido
+
+El icono de la app y los recursos gráficos de la ficha de Google Play.
+
+## Ficha de Google Play
+
+| Recurso | Archivo | Tamaño |
+|---|---|---|
+| Icono de la aplicación | `play-store-icon-512.png` | 512×512 |
+| Gráfico de funciones | `grafico-de-funciones.png` | 1024×500 |
+| Capturas de teléfono | `capturas/telefono/` (5) | 1080×1920 |
+| Capturas de tablet de 7" | `capturas/tablet-7/` (4) | 1080×1920 |
+| Capturas de tablet de 10" | `capturas/tablet-10/` (4) | 1440×2560 |
+
+Las capturas son de la app real: build de release en un emulador con Android 16, jugando partidas de verdad. Están en 9:16 y en PNG sin transparencia, como pide Play. Súbelas en el orden de su número, porque las primeras son las que más se ven en la ficha.
+
+El gráfico de funciones usa la fuente Roboto (licencia SIL Open Font).
+
+## Icono de la app
 
 Los signos + − × ÷ en blanco sobre un degradado del azul de la app. `vista-previa.png` muestra cómo queda en los launchers de Android (círculo y forma redondeada), en la tienda, como icono temático, en el splash y en tamaños pequeños.
-
-## Dónde va cada archivo
 
 | Archivo | Tamaño | Dónde va |
 |---|---|---|
